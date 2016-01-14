@@ -1,0 +1,35 @@
+---
+etcd_cluster_group: etcd
+#install type can be server or proxy. servers join the cluster as full members, while proxies operate as cluster clients
+etcd_install_type: server
+
+etcd_initial_token: etcd-cluster-01
+etcd_data_dir: /var/lib/etcd
+etcd_conf_dir: /etc/etcd
+
+etcd_ssl_cert: "{{ etcd_conf_dir }}/etcd.pem"
+etcd_ssl_key: "{{ etcd_conf_dir }}/etcd.key"
+etcd_ssl_ca_cert: "/usr/local/share/ca-certificates/etcd-ca.pem"
+
+etcd_client_ports: 
+  - 2379
+  - 4001
+etcd_peer_port: 2380
+
+#we use the calico apt repo to install etcd
+etcd_gpg_keys:
+  - key_name: 'projectcalico'
+    keyserver: 'hkp://keyserver.ubuntu.com:80'
+    fallback_keyserver: 'hkp://p80.pool.sks-keyservers.net:80'
+    hash_id: '0x67d7e35b3d40a6a7'
+
+# Repositories
+calico_apt_repo_branch: stable
+calico_apt_repo_url: "http://ppa.launchpad.net/project-calico/{{ calico_apt_repo_branch }}/ubuntu"
+calico_apt_repo:
+  repo: "deb {{ calico_apt_repo_url }} {{ ansible_distribution_release }} main"
+  state: "present"
+
+etcd_apt_packages:
+  - etcd
+

@@ -1,0 +1,6 @@
+---
+- include: etcd_pre_install.yml
+- include: etcd_install.yml
+- include: etcd_install_ssl.yml
+  when: etcd_user_ssl_cert is defined and etcd_user_ssl_key is defined
+- include: etcd_post_install.yml

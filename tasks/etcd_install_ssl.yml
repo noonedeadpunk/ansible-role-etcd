@@ -1,0 +1,41 @@
+---
+- name: Ensure etcd configuration directory exists
+  file: path="{{ etcd_conf_dir }}" state=directory
+  tags:
+    - etcd-config
+
+- name: Deploy SSL certificate and key
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "etcd"
+    group: "etcd"
+    mode: "{{ item.mode }}"
+  with_items:
+    - { src: "{{ etcd_user_ssl_cert }}", dest: "{{ etcd_ssl_cert }}", mode: "0644" }
+    - { src: "{{ etcd_user_ssl_key }}", dest: "{{ etcd_ssl_key }}", mode: "0600" }
+  tags:
+    - etcd-config
+    - etcd-ssl
+
+- name: Ensure user CA cert dir exists
+  file: path=/usr/local/share/ca-certificates state=directory
+  when: etcd_user_ssl_ca_cert is defined
+  tags:
+    - etcd-config
+    - etcd-ssl
+
+- name: Deploy SSL CA cert for etcd
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify: Update CA Cert index
+  with_items:
+    - { src: "{{ etcd_user_ssl_ca_cert }}", dest: "{{ etcd_ssl_ca_cert }}" }
+  when: etcd_user_ssl_ca_cert is defined
+  tags:
+    - etcd-config
+    - etcd-ssl

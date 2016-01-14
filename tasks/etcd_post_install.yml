@@ -1,0 +1,58 @@
+---
+- name: Ensure etcd data directory exists
+  file: 
+    path: "{{ etcd_data_dir }}"
+    state: directory
+    owner: "etcd"
+    group: "etcd"
+    mode: "0755"
+  tags:
+    - etcd-config
+
+- name: Set etcd access method (http/https)
+  set_fact: etcd_access_method="{% if etcd_user_ssl_cert is defined and etcd_user_ssl_key is defined  %}https{% else %}http{% endif %}"
+  run_once: true
+  tags:
+    - etcd-config
+    - etcd-verify
+
+- name: Drop etcd upstart configurations
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify:
+    - Reload init scripts
+    - Restart etcd
+  with_items:
+    - { src: "etcd.conf.j2", dest: "/etc/init/etcd.conf" }
+    - { src: "etcd.override.j2", dest: "/etc/init/etcd.override" }
+  tags:
+    - etcd-config
+    - upstart-init
+    - etcd-init
+
+- name: Start etcd and add to boot services
+  service:
+   name: "etcd"
+   enabled: yes
+  tags:
+    - upstart-init
+    - etcd-init
+
+- name: Flush handlers
+  meta: flush_handlers
+
+- name: Verify etcd cluster health
+  shell: "etcdctl cluster-health"
+  register: etcd_health
+  failed_when: etcd_health.rc != 0
+  until: etcd_health|success
+  retries: 5
+  delay: 2
+  when: inventory_hostname == groups[etcd_cluster_group][0]
+  tags:
+    - etcd-config
+    - etcd-verify
