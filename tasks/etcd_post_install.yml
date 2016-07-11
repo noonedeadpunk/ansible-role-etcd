@@ -1,6 +1,6 @@
 ---
 - name: Ensure etcd data directory exists
-  file: 
+  file:
     path: "{{ etcd_data_dir }}"
     state: directory
     owner: "etcd"
