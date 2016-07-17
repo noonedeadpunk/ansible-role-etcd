@@ -1,4 +1,26 @@
 ---
+# Copyright 2016, Logan Vig <logan2211@gmail.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Ensure etcd configuration directory exists
+  file: path="{{ etcd_conf_dir }}" state=directory
+  tags:
+    - etcd-config
+
+- include: etcd_post_install_ssl.yml
+  when: etcd_user_ssl_cert is defined and etcd_user_ssl_key is defined
+
 - name: Ensure etcd data directory exists
   file:
     path: "{{ etcd_data_dir }}"
@@ -16,31 +38,7 @@
     - etcd-config
     - etcd-verify
 
-- name: Drop etcd upstart configurations
-  template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    owner: "root"
-    group: "root"
-    mode: "0644"
-  notify:
-    - Reload init scripts
-    - Restart etcd
-  with_items:
-    - { src: "etcd.conf.j2", dest: "/etc/init/etcd.conf" }
-    - { src: "etcd.override.j2", dest: "/etc/init/etcd.override" }
-  tags:
-    - etcd-config
-    - upstart-init
-    - etcd-init
-
-- name: Start etcd and add to boot services
-  service:
-   name: "etcd"
-   enabled: yes
-  tags:
-    - upstart-init
-    - etcd-init
+- include: etcd_init.yml
 
 - name: Flush handlers
   meta: flush_handlers

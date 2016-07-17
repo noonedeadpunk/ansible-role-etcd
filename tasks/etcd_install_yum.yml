@@ -13,19 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-etcd_cluster_group: etcd
-#install type can be server or proxy. servers join the cluster as full members, while proxies operate as cluster clients
-etcd_install_type: server
-
-etcd_initial_token: etcd-cluster-01
-etcd_data_dir: /var/lib/etcd
-etcd_conf_dir: /etc/etcd
-
-etcd_ssl_cert: "{{ etcd_conf_dir }}/etcd.pem"
-etcd_ssl_key: "{{ etcd_conf_dir }}/etcd.key"
-etcd_ssl_ca_cert: "/usr/local/share/ca-certificates/etcd-ca.pem"
-
-etcd_client_ports:
-  - 2379
-  - 4001
-etcd_peer_port: 2380
+- name: Install etcd yum packages
+  yum:
+    pkg: "{{ item }}"
+    state: latest
+  register: install_packages
+  until: install_packages|success
+  retries: 5
+  delay: 2
+  with_items: "{{ etcd_packages }}"
+  tags:
+    - etcd-yum-packages

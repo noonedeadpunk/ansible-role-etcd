@@ -13,19 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-etcd_cluster_group: etcd
-#install type can be server or proxy. servers join the cluster as full members, while proxies operate as cluster clients
-etcd_install_type: server
+- include: etcd_init_upstart.yml
+  when: pid1_name == "init"
+  tags:
+    - upstart-init
+    - etcd-init
 
-etcd_initial_token: etcd-cluster-01
-etcd_data_dir: /var/lib/etcd
-etcd_conf_dir: /etc/etcd
+- include: etcd_init_systemd.yml
+  when: pid1_name == "systemd"
+  tags:
+    - systemd-init
+    - etcd-init
 
-etcd_ssl_cert: "{{ etcd_conf_dir }}/etcd.pem"
-etcd_ssl_key: "{{ etcd_conf_dir }}/etcd.key"
-etcd_ssl_ca_cert: "/usr/local/share/ca-certificates/etcd-ca.pem"
-
-etcd_client_ports:
-  - 2379
-  - 4001
-etcd_peer_port: 2380
+- name: Start etcd and add to boot services
+  service:
+   name: "etcd"
+   enabled: "yes"
+  tags:
+    - etcd-init

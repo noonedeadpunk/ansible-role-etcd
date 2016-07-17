@@ -13,14 +13,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include: etcd_install_apt.yml
-  when:
-    - ansible_pkg_mgr == 'apt'
+- name: Create systemd override directory
+  file: path="/etc/systemd/system/etcd.service.d" state=directory
   tags:
-    - install-apt
+    - etcd-config
 
-- include: etcd_install_yum.yml
-  when:
-    - ansible_pkg_mgr == 'yum'
+- name: Drop etcd systemd configurations
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify:
+    - Reload systemd daemon
+    - Restart etcd
+  with_items:
+    - { src: "systemd-etcd-override.conf.j2", dest: "/etc/systemd/system/etcd.service.d/override.conf" }
+    - { src: "systemd-etcd.conf.j2", dest: "{{ etcd_conf_dir }}/etcd.conf" }
   tags:
-    - install-yum
+    - etcd-config
+    - upstart-init
+    - etcd-init

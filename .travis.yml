@@ -1,0 +1,10 @@
+language: python
+sudo: required
+dist: trusty
+install:
+  - pip install tox
+script:
+  - tox
+env:
+  - TOXENV=linters
+  - TOXENV=functional
