@@ -15,13 +15,17 @@
 
 galaxy_info:
   author: logan
-  description: Installation etcd cluster
+  description: Install etcd cluster
   license: Apache2
   min_ansible_version: 1.6.6
   platforms:
     - name: Ubuntu
       versions:
         - trusty
+        - xenial
+    - name: EL
+      versions:
+        - 7
   categories:
     - cloud
     - development
