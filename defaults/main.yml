@@ -29,3 +29,5 @@ etcd_client_ports:
   - 2379
   - 4001
 etcd_peer_port: 2380
+
+etcd_packages: []
