@@ -13,13 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- include: test-create-containers.yml
+
 - name: Playbook for role testing
-  hosts: localhost
-  connection: local
+  hosts: test_containers
   roles:
     - role: "{{ rolename | basename }}"
-  vars:
-    etcd_cluster_group: all
   post_tasks:
     - name: Check etcd is running
       command: pgrep -a etcd
