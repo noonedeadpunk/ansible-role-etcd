@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+etcd_local_address: "{{ ansible_host | default('127.0.0.1') }}"
+
 etcd_package_state: latest
 
 etcd_cluster_group: etcd

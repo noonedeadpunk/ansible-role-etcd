@@ -7,6 +7,7 @@ etcd2 physical_host=localhost
 etcd3 physical_host=localhost
 
 [test_containers:vars]
+etcd_local_address="{{ inventory_hostname }}"
 etcd_cluster_group=test_containers
 
 [docker_containers:children]
