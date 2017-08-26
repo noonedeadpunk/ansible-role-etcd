@@ -13,20 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Check apt last update file
-  stat:
-    path: /var/cache/apt
-  register: apt_cache_stat
-  tags:
-    - etcd-apt-packages
-
-- name: Update apt if needed
-  apt:
-    update_cache: yes
-  when: ansible_date_time.epoch|float - apt_cache_stat.stat.mtime > cache_timeout
-  tags:
-    - etcd-apt-packages
-
 - name: Add calico PPA apt-keys
   apt_key:
     id: "{{ item.hash_id }}"
@@ -81,17 +67,12 @@
   tags:
     - etcd-repos
 
-- name: Update apt if needed
-  apt:
-    update_cache: yes
-  when: add_repo | changed
-  tags:
-    - etcd-apt-packages
-
 - name: Install etcd packages
   apt:
     pkg: "{{ item }}"
     state: "{{ etcd_package_state }}"
+    update_cache: yes
+    cache_valid_time: "{{ (add_repo | changed) | ternary('0', cache_timeout) }}"
   register: install_packages
   until: install_packages | success
   retries: 5
