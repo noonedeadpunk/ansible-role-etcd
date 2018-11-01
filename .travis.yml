@@ -1,3 +1,4 @@
+---
 language: python
 cache:
   timeout: 3600
@@ -6,47 +7,63 @@ cache:
     - $HOME/.docker
 services:
   - docker
+
+# Distros
+_ubuntu_xenial_build: &ubuntu_xenial_build
+  docker_image_tag: ubuntu-xenial
+  CACHE_NAME: xenial
+
+_centos_build: &centos_build
+  docker_image_tag: centos-7
+  CACHE_NAME: cent7
+
+# Ansible versions
+_ansible_25_build: &ansible_25_build
+  ansible_version: "'ansible>=2.5,<2.6'"
+
+_ansible_26_build: &ansible_26_build
+  ansible_version: "'ansible>=2.6,<2.7'"
+
 env:
   global:
     - ANSIBLE_FORCE_COLOR=1
     - docker_image=quay.io/loganv/docker-ci
     - docker_command=/lib/systemd/systemd
     - cache_dir=$HOME/.docker
-  matrix:
-    # LINTERS
-    - TOXENV=linters
-      CACHE_NAME=linters
-    # ANSIBLE 2.2 (OCATA)
-    - >
-      TOXENV=functional_2.2
-      docker_image_tag=ubuntu-xenial
-      CACHE_NAME=xenial
-    - >
-      TOXENV=functional_2.2
-      docker_image_tag=centos-7
-      CACHE_NAME=cent7
-    # ANSIBLE stable (OSA MASTER)
-    - >
-      TOXENV=functional_stable
-      docker_image_tag=ubuntu-xenial
-      CACHE_NAME=xenial
-    - >
-      TOXENV=functional_stable
-      docker_image_tag=centos-7
-      CACHE_NAME=cent7
-#    - >
-#      TOXENV=functional_stable
-#      docker_image_tag=opensuse-42.2
-#      CACHE_NAME=suse42
-#      docker_command=/usr/lib/systemd/systemd
+    - ansible_version=ansible
+
+matrix:
+  fast_finish: true
+  include:
+    # ANSIBLE 2.5
+    - env:
+        <<: *ubuntu_xenial_build
+        <<: *ansible_25_build
+    # ANSIBLE 2.6
+    - env:
+        <<: *ubuntu_xenial_build
+        <<: *ansible_26_build
+    # ANSIBLE STABLE
+    - env:
+        <<: *ubuntu_xenial_build
+  allow_failures:
+    - env:
+        <<: *centos_build
+        <<: *ansible_25_build
+    - env:
+        <<: *centos_build
+        <<: *ansible_26_build
+    - env:
+        <<: *centos_build
+
 before_install:
   # Load cached docker images
   - if [[ -d ${cache_dir} ]]; then ls ${cache_dir}/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
   - if [[ -n ${docker_image_tag} ]]; then docker pull ${docker_image}:${docker_image_tag}; fi
 install:
-  - pip install tox
+  - pip install -r test-requirements.txt ${ansible_version}
 script:
-  - tox
+  - molecule test
 before_cache:
   # Save tagged docker images
   - >
@@ -56,4 +73,5 @@ notifications:
   email: false
   slack:
     rooms:
+      # yamllint disable-line rule:line-length
       secure: BcmT7lv/Ieb8TCaAb8tN6dMABJ0sVGSM4u1QqHQQNFkCDJO8yHLeua00ePQGzRo5p4uXJiBUuK4dmMlC+msND3ylw0kLFT2WTyhcpsh3ZKoQgwI64zT0vyNZOoIaoAtnxtZ7uvTwpkWloPFgHBGL57G6cfFkmuIlZWHqnDxrMKvjIEN8GBJloJ4OvU5v3ex1Fs6DPD9uREl6YWZDxSP8LEXecyjmlVV63DT80OE0DSITfnz49OCTrl34f51sYnWgxCY/+yksuFr8nZBeIsaL7hxqJWs632bdbQHrnuDylRW0mpr4XrkDIj/4OIk9rDfFaXF4pgeQ99Rc1GVWRIyucIwTlJVROf5C7tUNAebvzWKUTeyVaqYJ3N7Uy9OtnlC0hbo7RFuRt9M5QxzPR9kYbM0EjjkNTNlE46bF9PI029sKzClL1ouaWJUYCmrFodWP7YD+KHMw2NunEQTw2mIo8P4VlMVtwfgrJwTpEXE5HK6UtWlRhTscAnKEZnnFwlBRKwsy9+dBmr6qYwrCazJBe27wmnf7tY47KnU2qw/hSPhjP+CeX07eO59l6MjwTeAZOYotMgfx4BXjYe5rgK/fmTouIcCQePKeuqKwTL/PUQ8ThIejpuR/GJLduMR0SVpQa7FrmkTx9wLtQsA0OJ/q7m+m++9rYkFaj5TXC/gdsKs=
