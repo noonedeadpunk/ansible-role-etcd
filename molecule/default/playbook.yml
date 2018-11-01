@@ -18,8 +18,9 @@
     - name: Check etcd is running
       command: pgrep -a etcd
       register: etcd_proc
+      changed_when: false
     - name: Test etcd cluster health
-      shell: etcdctl cluster-health
+      command: etcdctl cluster-health
       register: etcd_health
       changed_when: false
     - name: Check role functions

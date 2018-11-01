@@ -16,7 +16,7 @@
 ## APT Cache Options
 cache_timeout: 600
 
-#no PPA is required to install etcd on xenial
+# no PPA is required to install etcd on xenial
 etcd_gpg_keys: []
 etcd_repo_pins: []
 etcd_apt_repo: []

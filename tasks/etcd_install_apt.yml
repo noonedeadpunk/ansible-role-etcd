@@ -71,7 +71,7 @@
   apt:
     pkg: "{{ item }}"
     state: "{{ etcd_package_state }}"
-    update_cache: yes
+    update_cache: true
     cache_valid_time: "{{ (add_repo | changed) | ternary('0', cache_timeout) }}"
   register: install_packages
   until: install_packages | success

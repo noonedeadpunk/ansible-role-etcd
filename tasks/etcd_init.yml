@@ -27,7 +27,7 @@
 
 - name: Start etcd and add to boot services
   service:
-   name: "etcd"
-   enabled: "yes"
+    name: "etcd"
+    enabled: "yes"
   tags:
     - etcd-init

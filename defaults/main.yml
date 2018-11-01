@@ -18,7 +18,8 @@ etcd_local_address: "{{ ansible_host | default('127.0.0.1') }}"
 etcd_package_state: latest
 
 etcd_cluster_group: etcd
-#install type can be server or proxy. servers join the cluster as full members, while proxies operate as cluster clients
+# install type can be server or proxy. servers join the cluster as full
+# members, while proxies operate as cluster clients
 etcd_install_type: server
 
 etcd_initial_token: etcd-cluster-01

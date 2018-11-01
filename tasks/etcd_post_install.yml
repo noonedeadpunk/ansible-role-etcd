@@ -19,7 +19,7 @@
     - etcd-config
 
 - include: etcd_post_install_ssl.yml
-  static: no
+  static: false
   when:
     - "{{ etcd_user_ssl_cert is defined }}"
     - "{{ etcd_user_ssl_key is defined }}"
@@ -35,6 +35,7 @@
     - etcd-config
 
 - name: Set etcd access method (http/https)
+  # yamllint disable-line rule:line-length
   set_fact: etcd_access_method="{% if etcd_user_ssl_cert is defined and etcd_user_ssl_key is defined  %}https{% else %}http{% endif %}"
   run_once: true
   tags:
