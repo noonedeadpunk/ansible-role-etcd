@@ -51,6 +51,7 @@
   command: etcdctl cluster-health
   register: etcd_health
   failed_when: etcd_health.rc != 0
+  changed_when: false
   until: etcd_health|success
   retries: 5
   delay: 2
