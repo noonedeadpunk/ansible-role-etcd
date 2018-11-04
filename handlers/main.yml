@@ -16,9 +16,6 @@
 - name: Update CA Cert index
   command: /usr/sbin/update-ca-certificates
 
-- name: Reload init scripts
-  command: initctl reload-configuration
-
 - name: Restart etcd
   service:
     name: etcd

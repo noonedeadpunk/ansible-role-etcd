@@ -13,16 +13,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include: etcd_init_upstart.yml
-  when: pid1_name == "init"
+- name: Create systemd override directory
+  file: path="/etc/systemd/system/etcd.service.d" state=directory
   tags:
-    - upstart-init
-    - etcd-init
+    - etcd-config
 
-- include: etcd_init_systemd.yml
-  when: pid1_name == "systemd"
+- name: Drop etcd systemd configurations
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify:
+    - Restart etcd
+  with_items:
+    - { src: "systemd-etcd-override.conf.j2", dest: "/etc/systemd/system/etcd.service.d/override.conf" }
+    - { src: "systemd-etcd.conf.j2", dest: "{{ etcd_conf_dir }}/etcd.conf" }
   tags:
-    - systemd-init
+    - etcd-config
+    - upstart-init
     - etcd-init
 
 - name: Start etcd and add to boot services
