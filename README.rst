@@ -3,8 +3,8 @@ etcd Ansible Role
 
 Ansible role to install and configure etcd clusters and proxies
 
-.. image:: https://travis-ci.org/Logan2211/ansible-etcd.svg?branch=master
-    :target: https://travis-ci.org/Logan2211/ansible-etcd
+.. image:: https://travis-ci.org/logan2211/ansible-etcd.svg?branch=master
+    :target: https://travis-ci.org/logan2211/ansible-etcd
 
 Default Variables
 =================
