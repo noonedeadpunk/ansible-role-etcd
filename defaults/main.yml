@@ -50,7 +50,5 @@ etcd_ssl_cert: "{{ etcd_conf_dir }}/etcd.pem"
 etcd_ssl_key: "{{ etcd_conf_dir }}/etcd.key"
 etcd_ssl_ca_cert: "/usr/local/share/ca-certificates/etcd-ca.pem"
 
-etcd_client_ports:
-  - 2379
-  - 4001
+etcd_client_port: 2379
 etcd_peer_port: 2380
