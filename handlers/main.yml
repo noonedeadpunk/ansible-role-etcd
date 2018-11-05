@@ -20,4 +20,3 @@
   service:
     name: etcd
     state: restarted
-    daemon_reload: "{{ (ansible_service_mgr == 'systemd') | ternary(true, omit) }}"
