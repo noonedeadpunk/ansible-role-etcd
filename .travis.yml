@@ -39,20 +39,19 @@ matrix:
     - env:
         <<: *ubuntu_xenial_build
         <<: *ansible_25_build
+    - env:
+        <<: *centos_build
+        <<: *ansible_25_build
     # ANSIBLE 2.6
     - env:
         <<: *ubuntu_xenial_build
         <<: *ansible_26_build
-    # ANSIBLE STABLE
-    - env:
-        <<: *ubuntu_xenial_build
-  allow_failures:
-    - env:
-        <<: *centos_build
-        <<: *ansible_25_build
     - env:
         <<: *centos_build
         <<: *ansible_26_build
+    # ANSIBLE STABLE
+    - env:
+        <<: *ubuntu_xenial_build
     - env:
         <<: *centos_build
 
