@@ -5,8 +5,6 @@
   roles:
     - config_template
     - role: "{{ playbook_dir | dirname | dirname | basename }}"
-  vars:
-    etcd_local_address: "{{ inventory_hostname }}"
 
 - name: Attempt a partial deployment of the role only
   hosts: all[0]

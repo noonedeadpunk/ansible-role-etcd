@@ -31,7 +31,11 @@ etcd_system_shell: /bin/false
 etcd_system_comment: etcd system user
 etcd_system_user_home: "/var/lib/{{ etcd_system_user_name }}"
 
+# This MUST be an IP address becaus etcd will not bind hostnames
 etcd_local_address: "{{ ansible_host | default('127.0.0.1') }}"
+# This can be a FQDN which is used by cluster members/clients for incoming
+# connections to this node
+etcd_advertise_address: "{{ etcd_local_address }}"
 
 etcd_cluster_group: etcd
 # install type can be server or proxy. servers join the cluster as full

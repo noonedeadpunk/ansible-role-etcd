@@ -35,7 +35,8 @@ provisioner:
   inventory:
     group_vars:
       etcd:
-        ansible_host: "{{ inventory_hostname }}"
+        etcd_local_address: "{{ ansible_default_ipv4.address }}"
+        etcd_advertise_address: "{{ inventory_hostname }}"
   playbooks:
     # NOTE(logan): Use custom create playbook with user: root until upstream
     # merges https://github.com/metacloud/molecule/pull/1526
