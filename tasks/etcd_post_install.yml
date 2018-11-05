@@ -14,7 +14,11 @@
 # limitations under the License.
 
 - name: Ensure etcd configuration directory exists
-  file: path="{{ etcd_conf_dir }}" state=directory
+  file:
+    path: "{{ etcd_conf_dir }}"
+    state: directory
+    owner: "{{ etcd_system_user_name }}"
+    group: "{{ etcd_system_group_name }}"
   tags:
     - etcd-config
 
@@ -23,16 +27,6 @@
   when:
     - "{{ etcd_user_ssl_cert is defined }}"
     - "{{ etcd_user_ssl_key is defined }}"
-
-- name: Ensure etcd data directory exists
-  file:
-    path: "{{ etcd_data_dir }}"
-    state: directory
-    owner: "etcd"
-    group: "etcd"
-    mode: "0755"
-  tags:
-    - etcd-config
 
 - name: Set etcd access method (http/https)
   # yamllint disable-line rule:line-length

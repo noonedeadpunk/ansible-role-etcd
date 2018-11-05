@@ -24,6 +24,13 @@ etcd_arch_translation:
   x86_64: amd64
   aarch64: arm64
 
+## System info
+etcd_system_user_name: etcd
+etcd_system_group_name: etcd
+etcd_system_shell: /bin/false
+etcd_system_comment: etcd system user
+etcd_system_user_home: "/var/lib/{{ etcd_system_user_name }}"
+
 etcd_local_address: "{{ ansible_host | default('127.0.0.1') }}"
 
 etcd_cluster_group: etcd
@@ -32,7 +39,7 @@ etcd_cluster_group: etcd
 etcd_install_type: server
 
 etcd_initial_token: etcd-cluster-01
-etcd_data_dir: /var/lib/etcd
+etcd_data_dir: "{{ etcd_system_user_home }}"
 etcd_conf_dir: /etc/etcd
 
 etcd_ssl_cert: "{{ etcd_conf_dir }}/etcd.pem"

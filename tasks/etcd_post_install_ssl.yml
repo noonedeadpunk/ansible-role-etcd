@@ -17,8 +17,8 @@
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    owner: "etcd"
-    group: "etcd"
+    owner: "{{ etcd_system_user_name }}"
+    group: "{{ etcd_system_group_name }}"
     mode: "{{ item.mode }}"
   with_items:
     - { src: "{{ etcd_user_ssl_cert }}", dest: "{{ etcd_ssl_cert }}", mode: "0644" }

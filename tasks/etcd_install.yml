@@ -13,6 +13,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: Create etcd system group
+  group:
+    name: "{{ etcd_system_group_name }}"
+    gid: "{{ etcd_system_group_gid | default(omit) }}"
+    state: "present"
+    system: "yes"
+
+- name: Create etcd system user
+  user:
+    name: "{{ etcd_system_user_name }}"
+    uid: "{{ etcd_system_user_uid | default(omit) }}"
+    group: "{{ etcd_system_group_name }}"
+    comment: "{{ etcd_system_comment }}"
+    shell: "{{ etcd_system_shell }}"
+    system: true
+    createhome: true
+    home: "{{ etcd_system_user_home }}"
+
 - name: Get the etcd archive
   get_url:
     url: "{{ etcd_download_url }}"
@@ -41,6 +59,8 @@
       copy:
         src: "{{ tempdir.path }}/{{ item }}"
         dest: "/usr/local/bin/{{ item }}"
+        owner: root
+        group: root
         mode: '0755'
         remote_src: true
       with_items:
