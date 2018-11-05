@@ -28,14 +28,6 @@
     - "{{ etcd_user_ssl_cert is defined }}"
     - "{{ etcd_user_ssl_key is defined }}"
 
-- name: Set etcd access method (http/https)
-  # yamllint disable-line rule:line-length
-  set_fact: etcd_access_method="{% if etcd_user_ssl_cert is defined and etcd_user_ssl_key is defined  %}https{% else %}http{% endif %}"
-  run_once: true
-  tags:
-    - etcd-config
-    - etcd-verify
-
 - name: Drop the etcd configuration
   template:
     src: etcd.default.j2

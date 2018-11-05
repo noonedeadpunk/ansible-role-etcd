@@ -42,6 +42,10 @@ etcd_cluster_group: etcd
 # members, while proxies operate as cluster clients
 etcd_install_type: server
 
+etcd_url_scheme: "{{ (etcd_user_ssl_cert is defined and
+                      etcd_user_ssl_key is defined) |
+                     ternary('https', 'http') }}"
+
 etcd_initial_token: etcd-cluster-01
 etcd_data_dir: "{{ etcd_system_user_home }}"
 etcd_conf_dir: /etc/etcd
