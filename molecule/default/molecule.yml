@@ -23,11 +23,15 @@ lint:
     config-file: molecule/default/yaml-lint.yml
 platforms:
   - <<: *instance_base
-    name: instance1
+    name: etcd1
   - <<: *instance_base
-    name: instance2
+    name: etcd2
   - <<: *instance_base
-    name: instance3
+    name: etcd3
+  - <<: *instance_base
+    name: etcd_gw1
+    groups:
+      - etcd_gateway
 provisioner:
   name: ansible
   lint:
@@ -37,6 +41,8 @@ provisioner:
       etcd:
         etcd_local_address: "{{ ansible_default_ipv4.address }}"
         etcd_advertise_address: "{{ inventory_hostname }}"
+      etcd_gateway:
+        etcd_install_type: gateway
   playbooks:
     # NOTE(logan): Use custom create playbook with user: root until upstream
     # merges https://github.com/metacloud/molecule/pull/1526

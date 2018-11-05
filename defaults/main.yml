@@ -38,13 +38,21 @@ etcd_local_address: "{{ ansible_host | default('127.0.0.1') }}"
 etcd_advertise_address: "{{ etcd_local_address }}"
 
 etcd_cluster_group: etcd
-# install type can be server or proxy. servers join the cluster as full
-# members, while proxies operate as cluster clients
+# install type can be server or gateway. servers join the cluster as
+# full members, while gateways operate as cluster clients
+# see https://coreos.com/etcd/docs/latest/op-guide/gateway.html for more info
+# about gateways
 etcd_install_type: server
 
 etcd_url_scheme: "{{ (etcd_user_ssl_cert is defined and
                       etcd_user_ssl_key is defined) |
                      ternary('https', 'http') }}"
+
+etcd_gateway_address: 127.0.0.1
+etcd_gateway_port: 2379
+etcd_gateway_args: >-
+  --endpoints {{ _etcd_gateway_endpoints | join(',') }}
+  --listen-addr {{ etcd_gateway_address }}:{{ etcd_gateway_port }}
 
 etcd_initial_token: etcd-cluster-01
 etcd_data_dir: "{{ etcd_system_user_home }}"

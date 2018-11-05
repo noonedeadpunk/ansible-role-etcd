@@ -1,5 +1,5 @@
 ---
-# Copyright 2016, Logan Vig <logan2211@gmail.com>
+# Copyright 2018, Logan Vig <logan2211@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,5 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include: etcd_install.yml
-- include: "etcd_post_install_{{ etcd_install_type }}.yml"
+_etcd_gateway_endpoints: |-
+  {% set _endpoints = [] %}
+  {% for node in groups[etcd_cluster_group] | default([]) %}
+  {%   set _ = _endpoints.append(
+         hostvars[node]['etcd_advertise_address'] ~ ':' ~
+         hostvars[node]['etcd_client_port'] | default('2379')
+       )
+  %}
+  {% endfor %}
+  {{ _endpoints }}

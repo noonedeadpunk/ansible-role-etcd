@@ -1,13 +1,19 @@
 ---
 
 - name: Playbook for role testing
-  hosts: all
+  hosts: etcd
   roles:
     - config_template
     - role: "{{ playbook_dir | dirname | dirname | basename }}"
 
 - name: Attempt a partial deployment of the role only
-  hosts: all[0]
+  hosts: etcd[0]
+  roles:
+    - config_template
+    - role: "{{ playbook_dir | dirname | dirname | basename }}"
+
+- name: Deploy the etcd3 gRPC gateways
+  hosts: etcd_gateway
   roles:
     - config_template
     - role: "{{ playbook_dir | dirname | dirname | basename }}"
