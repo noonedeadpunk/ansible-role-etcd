@@ -62,14 +62,15 @@
             LimitNOFILE: 65536
 
 - name: Verify etcd cluster health
-  command: etcdctl cluster-health
+  uri:
+    url: "{{ etcd_url_scheme }}://127.0.0.1:{{ etcd_client_port }}/health"
+    return_content: true
   register: etcd_health
-  failed_when: etcd_health.rc != 0
+  failed_when: "'true' not in etcd_health.content"
   changed_when: false
   until: etcd_health is success
   retries: 5
   delay: 2
-  when: inventory_hostname == groups[etcd_cluster_group][0]
   tags:
     - etcd-config
     - etcd-verify
