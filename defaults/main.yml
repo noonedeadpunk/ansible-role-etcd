@@ -27,6 +27,7 @@ etcd_arch_translation:
 ## System info
 etcd_system_user_name: etcd
 etcd_system_group_name: etcd
+etcd_system_slice_name: etcd
 etcd_system_shell: /bin/false
 etcd_system_comment: etcd system user
 etcd_system_user_home: "/var/lib/{{ etcd_system_user_name }}"
