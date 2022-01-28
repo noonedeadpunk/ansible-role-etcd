@@ -23,7 +23,6 @@
     - etcd-config
 
 - include: etcd_post_install_ssl.yml
-  static: false
   when:
     - "{{ etcd_user_ssl_cert is defined }}"
     - "{{ etcd_user_ssl_key is defined }}"
