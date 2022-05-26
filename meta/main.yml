@@ -15,6 +15,7 @@
 
 galaxy_info:
   author: logan
+  role_name: etcd
   description: Install etcd cluster
   license: Apache2
   min_ansible_version: 2.4
