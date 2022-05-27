@@ -2,25 +2,25 @@
 _instance_base: &instance_base
   groups:
     - etcd
-  image: "${docker_image:-quay.io/loganv/docker-ci}:${docker_image_tag:-ubuntu-xenial}"
+  image: "${docker_user:-quay.io/gotmax23}/${docker_image_tag:-ubuntu-systemd:focal}"
   # NOTE(logan): Uncomment user arg once upstream PR is released
   # https://github.com/metacloud/molecule/pull/1526
   # user: root
-  command: ${docker_command:-/lib/systemd/systemd}
-  volumes:
-    - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  command: ${docker_command:-""}
   privileged: true
   pre_build_image: true
   networks:
     - name: etcd
 dependency:
   name: galaxy
+  options:
+    requirements-file: requirements.yml
+    role-file: requirements.yml
 driver:
   name: docker
-lint:
-  name: yamllint
-  options:
-    config-file: molecule/default/yaml-lint.yml
+lint: |
+  set -e
+  yamllint . -c molecule/default/yaml-lint.yml
 platforms:
   - <<: *instance_base
     name: etcd1
@@ -44,13 +44,7 @@ provisioner:
       etcd_gateway:
         etcd_install_type: gateway
   playbooks:
-    # NOTE(logan): Use custom create playbook with user: root until upstream
-    # merges https://github.com/metacloud/molecule/pull/1526
-    # NOTE(logan): Also etcd uses the purge_networks docker flag since the
-    # cluster is built in a docker private netowrk. Wait for upstream PR
-    # https://github.com/ansible/molecule/pull/1543 to merge before removing
-    # the create playbook
-    create: create.yml
+    prepare: prepare.yml
     converge: playbook.yml
 scenario:
   name: default
