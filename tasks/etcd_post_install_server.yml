@@ -22,7 +22,7 @@
   tags:
     - etcd-config
 
-- include: etcd_post_install_ssl.yml
+- include_tasks: etcd_post_install_ssl.yml
   when:
     - "{{ etcd_user_ssl_cert is defined }}"
     - "{{ etcd_user_ssl_key is defined }}"

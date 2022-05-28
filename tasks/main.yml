@@ -13,5 +13,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include: etcd_install.yml
-- include: "etcd_post_install_{{ etcd_install_type }}.yml"
+- import_tasks: etcd_install.yml
+- include_tasks: "etcd_post_install_{{ etcd_install_type }}.yml"
