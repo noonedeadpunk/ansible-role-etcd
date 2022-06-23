@@ -23,11 +23,11 @@
       register: etcd_proc
       changed_when: false
     - name: Test etcd cluster health
-      command: etcdctl cluster-health
+      command: etcdctl endpoint health
       register: etcd_health
       changed_when: false
     - name: Check role functions
       assert:
         that:
-          - "'cluster is healthy' in etcd_health.stdout"
+          - etcd_health.stdout.split('\n') | select('match', '[0-9,.,:]* is healthy') | list | length > 0
       changed_when: false
