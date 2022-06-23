@@ -14,11 +14,13 @@
 # limitations under the License.
 
 # Versions published at https://github.com/etcd-io/etcd/releases
-etcd_version: 3.3.10
+etcd_version: 3.5.4
 etcd_download_arch: "{{ etcd_arch_translation[ansible_architecture] | default(ansible_architecture) }}"
 # yamllint disable-line rule:line-length
 etcd_download_url: "https://github.com/etcd-io/etcd/releases/download/v{{ etcd_version }}/etcd-v{{ etcd_version }}-linux-{{ etcd_download_arch }}.tar.gz"
-etcd_download_checksum: 'sha256:1620a59150ec0a0124a65540e23891243feb2d9a628092fb1edcc23974724a45'
+etcd_download_checksum:
+  x86_64: 'sha256:b1091166153df1ee0bb29b47fb1943ef0ddf0cd5d07a8fe69827580a08134def'
+  aarch64: 'sha256:8e9c2c28ed6b35f36fd94300541da10e1385f335d677afd8efccdcba026f1fa7'
 
 etcd_arch_translation:
   x86_64: amd64

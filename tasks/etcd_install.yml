@@ -35,7 +35,7 @@
   get_url:
     url: "{{ etcd_download_url }}"
     dest: "/var/cache/{{ etcd_download_url | basename }}"
-    checksum: "{{ etcd_download_checksum }}"
+    checksum: "{{ etcd_download_checksum[ansible_architecture] }}"
   register: etcd_download
 
 - name: Install etcd

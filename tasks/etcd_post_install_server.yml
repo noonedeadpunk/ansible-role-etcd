@@ -66,7 +66,7 @@
     url: "{{ etcd_url_scheme }}://127.0.0.1:{{ etcd_client_port }}/health"
     return_content: true
   register: etcd_health
-  failed_when: "'true' not in etcd_health.content"
+  failed_when: (etcd_health.content | from_json)['health'] != 'true'
   changed_when: false
   until: etcd_health is success
   retries: 5
