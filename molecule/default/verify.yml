@@ -1,0 +1,18 @@
+---
+
+- name: Verify the role functions
+  hosts: all
+  tasks:
+    - name: Check etcd is running
+      command: pgrep -a etcd
+      register: etcd_proc
+      changed_when: false
+    - name: Test etcd cluster health
+      command: etcdctl endpoint health
+      register: etcd_health
+      changed_when: false
+    - name: Check role functions
+      assert:
+        that:
+          - etcd_health.stdout.split('\n') | select('match', '[0-9,.,:]* is healthy') | list | length > 0
+      changed_when: false
