@@ -39,7 +39,7 @@ provisioner:
   inventory:
     group_vars:
       etcd:
-        etcd_local_address: "{{ ansible_default_ipv4.address }}"
+        etcd_local_address: "{{ ansible_facts['default_ipv4']['address'] }}"
         etcd_advertise_address: "{{ inventory_hostname }}"
       etcd_gateway:
         etcd_install_type: gateway
@@ -47,5 +47,8 @@ provisioner:
     prepare: prepare.yml
     converge: playbook.yml
     verify: verify.yml
+  config_options:
+    defaults:
+      inject_facts_as_vars: false
 scenario:
   name: default
