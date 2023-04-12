@@ -15,7 +15,7 @@
 
 # Versions published at https://github.com/etcd-io/etcd/releases
 etcd_version: 3.5.4
-etcd_download_arch: "{{ etcd_arch_translation[ansible_architecture] | default(ansible_architecture) }}"
+etcd_download_arch: "{{ etcd_arch_translation[ansible_facts['architecture']] | default(ansible_facts['architecture']) }}"
 # yamllint disable-line rule:line-length
 etcd_download_url: "https://github.com/etcd-io/etcd/releases/download/v{{ etcd_version }}/etcd-v{{ etcd_version }}-linux-{{ etcd_download_arch }}.tar.gz"
 etcd_download_checksum:
