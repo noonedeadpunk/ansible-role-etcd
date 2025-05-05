@@ -1,16 +1,4 @@
 ---
-_instance_base: &instance_base
-  groups:
-    - etcd
-  image: "${docker_user:-quay.io/gotmax23}/${docker_image_tag:-ubuntu-systemd:focal}"
-  # NOTE(logan): Uncomment user arg once upstream PR is released
-  # https://github.com/metacloud/molecule/pull/1526
-  # user: root
-  command: ${docker_command:-""}
-  privileged: true
-  pre_build_image: true
-  networks:
-    - name: etcd
 dependency:
   name: galaxy
   options:
@@ -22,13 +10,51 @@ lint: |
   set -e
   yamllint . -c molecule/default/yaml-lint.yml
 platforms:
-  - <<: *instance_base
+  - groups:
+    - etcd
+    image: "${docker_user:-quay.io/gotmax23}/${docker_image_tag:-ubuntu-systemd:focal}"
+    # NOTE(logan): Uncomment user arg once upstream PR is released
+    # https://github.com/metacloud/molecule/pull/1526
+    # user: root
+    command: ${docker_command:-""}
+    privileged: true
+    pre_build_image: true
+    networks:
+      - name: etcd
     name: etcd1
-  - <<: *instance_base
+  - groups:
+    - etcd
+    image: "${docker_user:-quay.io/gotmax23}/${docker_image_tag:-ubuntu-systemd:focal}"
+    # NOTE(logan): Uncomment user arg once upstream PR is released
+    # https://github.com/metacloud/molecule/pull/1526
+    # user: root
+    command: ${docker_command:-""}
+    privileged: true
+    pre_build_image: true
+    networks:
+      - name: etcd
     name: etcd2
-  - <<: *instance_base
+  - groups:
+    - etcd
+    image: "${docker_user:-quay.io/gotmax23}/${docker_image_tag:-ubuntu-systemd:focal}"
+    # NOTE(logan): Uncomment user arg once upstream PR is released
+    # https://github.com/metacloud/molecule/pull/1526
+    # user: root
+    command: ${docker_command:-""}
+    privileged: true
+    pre_build_image: true
+    networks:
+      - name: etcd
     name: etcd3
-  - <<: *instance_base
+  - image: "${docker_user:-quay.io/gotmax23}/${docker_image_tag:-ubuntu-systemd:focal}"
+    # NOTE(logan): Uncomment user arg once upstream PR is released
+    # https://github.com/metacloud/molecule/pull/1526
+    # user: root
+    command: ${docker_command:-""}
+    privileged: true
+    pre_build_image: true
+    networks:
+      - name: etcd
     name: etcd_gw1
     groups:
       - etcd_gateway
