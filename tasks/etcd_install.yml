@@ -42,6 +42,11 @@
   when:
     - etcd_download is changed
   block:
+    - name: Ensure tar is installed
+      package:
+        name: tar
+        state: present
+
     - name: Get a temp location for the etcd fetch
       tempfile:
         state: directory
